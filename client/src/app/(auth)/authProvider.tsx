@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Amplify } from 'aws-amplify';
 
 import { Authenticator, Heading, Radio, RadioGroupField, useAuthenticator, View } from '@aws-amplify/ui-react';
@@ -36,7 +36,7 @@ const components = {
   SignIn: {
     Footer() {
       const { toSignUp } = useAuthenticator()
-       return (
+      return (
         <View className="text-center mt-4">
           <p className="text-muted-foreground">
             Don&apos;t have an account?{" "}
@@ -71,9 +71,9 @@ const components = {
         </>
       )
     },
-     Footer() {
+    Footer() {
       const { toSignIn } = useAuthenticator()
-       return (
+      return (
         <View className="text-center mt-4">
           <p className="text-muted-foreground">
             Alreadey have an account?{" "}
@@ -96,7 +96,7 @@ const formFields = {
       placeholder: "Enter your email",
       label: "Email",
       isRequired: true
-    }, 
+    },
     password: {
       placeholder: "Enter your password",
       label: "Password",
@@ -109,7 +109,7 @@ const formFields = {
       placeholder: "Choose a username",
       label: "Username",
       isRequired: true
-    }, 
+    },
     email: {
       order: 2,
       placeholder: "Enter your email address",
@@ -131,14 +131,29 @@ const formFields = {
   }
 }
 
-const Auth = ({ children }: {children: React.ReactNode}) => {
+const Auth = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthenticator((context) => [context.user])
   const router = useRouter()
   const pathname = usePathname()
-  
+  const isAuthPage = pathname.match(/^\/(signin|signup)$/);
+  const isDashboardPage = pathname.startsWith("/manager") || pathname.startsWith("/tenants")
+
+  useEffect(() => {
+    if (user && isAuthPage) {
+      router.push("/");
+    }
+  }, [user, isAuthPage, router]);
+
+  // Allow access to public pages without authentication
+  if (!isAuthPage && !isDashboardPage) {
+    return <>{children}</>;
+  }
+
+
   return (
     <div className="h-full">
       <Authenticator
+        initialState={pathname.includes("signup") ? "signUp" : "signIn"}
         components={components}
         formFields={formFields}
       >
