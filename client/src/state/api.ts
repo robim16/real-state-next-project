@@ -1,9 +1,19 @@
+import { Manager, Tenant } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
+import { headers } from "next/headers";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    prepareHeaders: async (headers) => {
+      const session = await fetchAuthSession()
+      const { idToken } = session.tokens ?? {}
+      if (idToken) {
+        headers.set("Authorization", `Bearer ${idToken}`)
+      }
+      return headers
+    }
   }),
   reducerPath: "api",
   tagTypes: [],
@@ -26,11 +36,12 @@ export const api = createApi({
           return {
             data: {
               cognitoInfo: {...user},
-              userInfo: userDetailsResponse.data
+              userInfo: userDetailsResponse.data as Tenant | Manager,
+              userRole
             }
           }
-        } catch (error) {
-          
+        } catch (error: any) {
+          return { error: error.message || "Could not fetch user details"}
         }
       }
     })
