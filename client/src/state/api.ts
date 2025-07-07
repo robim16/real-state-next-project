@@ -33,6 +33,12 @@ export const api = createApi({
 
           let userDetailsResponse = await fetchWithBQ(endpoint)
 
+          if (userDetailsResponse.error && userDetailsResponse.error.status === 404) {
+            
+          } else {
+            
+          }
+
           return {
             data: {
               cognitoInfo: {...user},
