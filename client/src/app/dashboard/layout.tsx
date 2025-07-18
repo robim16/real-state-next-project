@@ -9,7 +9,7 @@ import { useGetAuthUserQuery } from '@/state/api'
 import { usePathname, useRouter } from 'next/navigation'
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-    const { data: authUser } = useGetAuthUserQuery()
+    const { data: authUser, isLoading: authLoading } = useGetAuthUserQuery()
     const router = useRouter()
     const pathname = usePathname()
     const [isLoading, setIsLoading] = useState(true)
@@ -29,9 +29,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     { scroll: false }
                 )
             }
+            else {
+                setIsLoading(false)
+            }
         }
-    })
+    }, [authUser, router, pathname])
 
+
+    if (authLoading || isLoading) return <>Loading...</>
     if (!authUser?.userRole) return null
     
     return (
