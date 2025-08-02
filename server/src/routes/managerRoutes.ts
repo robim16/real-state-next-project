@@ -3,12 +3,14 @@ const router = express.Router()
 import {
     getManager,
     createManager,
-    updateManager
+    updateManager,
+    getManagerProperties
 } from "../controllers/managerController"
 
 
 router.get("/:cognitoId", getManager)
-router.post("/", createManager)
 router.put("/:cognitoId", updateManager)
+router.get("/:cognitoId/properties", getManagerProperties)
+router.post("/", createManager)
 
 export default router
