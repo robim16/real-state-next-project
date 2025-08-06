@@ -191,7 +191,7 @@ export const getProperty = async (
             };
             res.json(propertyWithCoordinates);
         }
-    } catch (err) {
+    } catch (err: any) {
         res
             .status(500)
             .json({ message: `Error retrieving property: ${err.message}` });
