@@ -37,7 +37,7 @@ export const authMiddleware = (allowedRules: string[]) => {
             }
 
             const hasAccess = allowedRules.includes(userRole.toLocaleLowerCase())
-            if (hasAccess) {
+            if (!hasAccess) {
                 res.status(403).json({ message: "Access Denied"})
             }
         } catch (error) {

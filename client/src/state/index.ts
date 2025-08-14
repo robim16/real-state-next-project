@@ -32,7 +32,7 @@ export const initialState: InitialStateTypes = {
     squareFeet: [null, null],
     coordinates: [-118.25, 34.05],
   },
-  isFiltersFullOpen: false,
+  isFiltersFullOpen: true,
   viewMode: "grid",
 };
 
