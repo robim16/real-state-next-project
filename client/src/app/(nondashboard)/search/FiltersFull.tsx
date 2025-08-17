@@ -103,12 +103,12 @@ const FiltersFull = () => {
               }
               className="rounded-l-xl rounded-r-none border-r-0"
             />
-            {/* <Button
+            <Button
               onClick={handleLocationSearch}
               className="rounded-r-xl rounded-l-none border-l-none border-black shadow-none border hover:bg-primary-700 hover:text-primary-50"
             >
               <Search className="w-4 h-4" />
-            </Button> */}
+            </Button>
           </div>
         </div>
 

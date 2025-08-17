@@ -93,7 +93,6 @@ const FiltersBar = () => {
     return (
         <div className='flex justify-between items-center w-full py-5'>
             <div className='flex justify-between items-center gap-4 p-2'>
-                <p>all filters</p>
                 {/* All Filters */}
                 <Button
                     variant="outline"
@@ -115,13 +114,13 @@ const FiltersBar = () => {
                         onChange={(e) => setSearchInput(e.target.value)}
                         className="w-40 rounded-l-xl rounded-r-none border-primary-400 border-r-0"
                     />
-                    {/* <Button
+                    <Button
                         onClick={handleLocationSearch}
                         className={`rounded-r-xl rounded-l-none border-l-none border-primary-400 shadow-none 
                         border hover:bg-primary-700 hover:text-primary-50`}
                     >
                         <Search className="w-4 h-4" />
-                    </Button> */}
+                    </Button> 
                 </div>
 
                 <div className="flex gap-1">
