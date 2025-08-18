@@ -10,8 +10,7 @@ import { setFilters } from "@/state";
 import FiltersBar from "./FiltersBar";
 import FiltersFull from "./FiltersFull";
 import Map from "./Map";
-// import Map from "./Map";
-// import Listings from "./Listings";
+import Listings from "./Listings";
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
@@ -41,7 +40,7 @@ const SearchPage = () => {
   }, []);
 
   return (
-    <div
+     <div
       className="w-full mx-auto px-5 flex flex-col"
       style={{
         height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
@@ -60,7 +59,7 @@ const SearchPage = () => {
         </div>
         <Map />
         <div className="basis-4/12 overflow-y-auto">
-          {/* <Listings /> */}
+          <Listings />
         </div>
       </div>
     </div>
