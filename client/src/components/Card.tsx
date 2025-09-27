@@ -4,19 +4,19 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 
 const Card = ({
-    property,
-    isFavorite,
-    onFavoriteToggle,
-    showFavoriteButton,
-    propertyLink
+  property,
+  isFavorite,
+  onFavoriteToggle,
+  showFavoriteButton,
+  propertyLink
 }: CardProps) => {
 
-    const [imgSrc, setImgSrc] = useState(
-        property.photoUrls?.[0] || "/placeholder.jpg"
-    )
+  const [imgSrc, setImgSrc] = useState(
+    property.photoUrls?.[0] || "/placeholder.jpg"
+  )
 
-    return (
-        <div className="bg-white rounded-xl overflow-hidden shadow-lg w-full mb-5">
+  return (
+    <div className="bg-white rounded-xl overflow-hidden shadow-lg w-full mb-5">
       <div className="relative">
         <div className="w-full h-48 relative">
           <Image
@@ -46,9 +46,8 @@ const Card = ({
             onClick={onFavoriteToggle}
           >
             <Heart
-              className={`w-5 h-5 ${
-                isFavorite ? "text-red-500 fill-red-500" : "text-gray-600"
-              }`}
+              className={`w-5 h-5 ${isFavorite ? "text-red-500 fill-red-500" : "text-gray-600"
+                }`}
             />
           </button>
         )}
@@ -102,7 +101,7 @@ const Card = ({
         </div>
       </div>
     </div>
-    )
+  )
 }
 
 export default Card
