@@ -15,7 +15,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (authUser) {
       const userRole = authUser.userRole?.toLowerCase();
-    //   console.log(authUser);
+ 
       if (
         (userRole === "manager" && pathname.startsWith("/search")) ||
         (userRole === "manager" && pathname === "/")

@@ -113,7 +113,6 @@ export const createApplication = async (
         }
 
         const newApplication = await prisma.$transaction(async (prisma) => {
-            // Create lease first
             const lease = await prisma.lease.create({
                 data: {
                     startDate: new Date(), // hoy
@@ -172,7 +171,7 @@ export const updateApplicationStatus = async (
     res: Response
 ): Promise<void> => {
     try {
-        
+
         const { id } = req.params;
         const { status } = req.body;
         console.log("status:", status);
@@ -191,58 +190,58 @@ export const updateApplicationStatus = async (
         }
 
         if (status === "Approved") {
-      const newLease = await prisma.lease.create({
-        data: {
-          startDate: new Date(),
-          endDate: new Date(
-            new Date().setFullYear(new Date().getFullYear() + 1)
-          ),
-          rent: application.property.pricePerMonth,
-          deposit: application.property.securityDeposit,
-          propertyId: application.propertyId,
-          tenantCognitoId: application.tenantCognitoId,
-        },
-      });
+            const newLease = await prisma.lease.create({
+                data: {
+                    startDate: new Date(),
+                    endDate: new Date(
+                        new Date().setFullYear(new Date().getFullYear() + 1)
+                    ),
+                    rent: application.property.pricePerMonth,
+                    deposit: application.property.securityDeposit,
+                    propertyId: application.propertyId,
+                    tenantCognitoId: application.tenantCognitoId,
+                },
+            });
 
-      // se modifica la property
-      await prisma.property.update({
-        where: { id: application.propertyId },
-        data: {
-          tenants: {
-            connect: { cognitoId: application.tenantCognitoId },
-          },
-        },
-      });
+            // se modifica la property
+            await prisma.property.update({
+                where: { id: application.propertyId },
+                data: {
+                    tenants: {
+                        connect: { cognitoId: application.tenantCognitoId },
+                    },
+                },
+            });
 
-      // Update the application with the new lease ID
-      await prisma.application.update({
-        where: { id: Number(id) },
-        data: { status, leaseId: newLease.id },
-        include: {
-          property: true,
-          tenant: true,
-          lease: true,
-        },
-      });
-    } else {
-      // Update the application status (for both "Denied" and other statuses)
-      await prisma.application.update({
-        where: { id: Number(id) },
-        data: { status },
-      });
-    }
+            // Update the application with the new lease ID
+            await prisma.application.update({
+                where: { id: Number(id) },
+                data: { status, leaseId: newLease.id },
+                include: {
+                    property: true,
+                    tenant: true,
+                    lease: true,
+                },
+            });
+        } else {
+            // Update the application status (for both "Denied" and other statuses)
+            await prisma.application.update({
+                where: { id: Number(id) },
+                data: { status },
+            });
+        }
 
-    // respuesta com la aplicacion actualizada
-    const updatedApplication = await prisma.application.findUnique({
-      where: { id: Number(id) },
-      include: {
-        property: true,
-        tenant: true,
-        lease: true,
-      },
-    });
+        // respuesta com la aplicacion actualizada
+        const updatedApplication = await prisma.application.findUnique({
+            where: { id: Number(id) },
+            include: {
+                property: true,
+                tenant: true,
+                lease: true,
+            },
+        });
 
-    res.json(updatedApplication);
+        res.json(updatedApplication);
 
     } catch (error: any) {
         res
