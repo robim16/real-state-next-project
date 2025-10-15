@@ -1,57 +1,53 @@
-
 import { useGetPropertyQuery } from "@/state/api";
 import { Compass, MapPin } from "lucide-react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import React, { useEffect, useRef } from "react";
 
-
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 
 const PropertyLocation = ({ propertyId }: PropertyDetailsProps) => {
-    const {
-        data: property,
-        isError,
-        isLoading,
-    } = useGetPropertyQuery(propertyId);
-    const mapContainerRef = useRef(null)
+  const {
+    data: property,
+    isError,
+    isLoading,
+  } = useGetPropertyQuery(propertyId);
+  const mapContainerRef = useRef(null);
 
-    if (isLoading) return <>Loading...</>;
-    if (isError || !property) {
-        return <>Property not Found</>;
-    }
+  useEffect(() => {
+    if (isLoading || isError || !property) return;
 
-    useEffect(() => {
-        if (isLoading || isError || !property) return;
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current!,
+      style: "mapbox://styles/majesticglue/cm6u301pq008b01sl7yk1cnvb",
+      center: [
+        property.location.coordinates.longitude,
+        property.location.coordinates.latitude,
+      ],
+      zoom: 14,
+    });
 
-        const map = new mapboxgl.Map({
-            container: mapContainerRef.current!,
-            style: "mapbox://styles/majesticglue/cm6u301pq008b01sl7yk1cnvb",
-            center: [
-                property.location.coordinates.longitude,
-                property.location.coordinates.latitude
-            ],
-            zoom: 14,
-        });
+    const marker = new mapboxgl.Marker()
+      .setLngLat([
+        property.location.coordinates.longitude,
+        property.location.coordinates.latitude,
+      ])
+      .addTo(map);
 
-        const marker = new mapboxgl.Marker()
-            .setLngLat([
-                property.location.coordinates.longitude,
-                property.location.coordinates.latitude
-            ])
-            .addTo(map);
+    const markerElement = marker.getElement();
+    const path = markerElement.querySelector("path[fill='#3FB1CE']");
+    if (path) path.setAttribute("fill", "#000000");
 
-        const markerElement = marker.getElement()
-        const path = markerElement.querySelector("path[fill='#3FB1CE']")
+    return () => map.remove();
+  }, [property, isError, isLoading]);
 
-        if (path) path.setAttribute("fill", "#000000")
+  if (isLoading) return <>Loading...</>;
+  if (isError || !property) {
+    return <>Property not Found</>;
+  }
 
-
-        return () => map.remove();
-    }, [property, isError, isLoading]);
-
-    return (
-        <div className="py-16">
+  return (
+    <div className="py-16">
       <h3 className="text-xl font-semibold text-primary-800 dark:text-primary-100">
         Map and Location
       </h3>
@@ -80,7 +76,7 @@ const PropertyLocation = ({ propertyId }: PropertyDetailsProps) => {
         ref={mapContainerRef}
       />
     </div>
-    );
+  );
 };
 
 export default PropertyLocation;
