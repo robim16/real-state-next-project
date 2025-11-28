@@ -24,19 +24,21 @@ const FiltersBar = () => {
     const viewMode = useAppSelector((state) => state.global.viewMode)
     const [searchInput, setSearchInput] = useState(filters.location)
 
-    const updateURL = debounce((newFilters) => {
-        const cleanFilters = cleanParams(newFilters)
 
-        const updatedSearchParams = new URLSearchParams();
+    //espera si se llama varias veces en un corto periodo de tiempo
+    const updateURL = debounce((newFilters) => {
+        const cleanFilters = cleanParams(newFilters)//elimina filtros de busqueda vacios
+
+        const updatedSearchParams = new URLSearchParams();//maneja los parametros de busqueda en la URL
 
         Object.entries(cleanFilters).forEach(([key, value]) => {
             updatedSearchParams.set(
                 key,
-                Array.isArray(value) ? value.join(",") : value.toString()
+                Array.isArray(value) ? value.join(",") : value.toString()//convierte arrays a string
             );
         });
 
-        router.push(`${pathname}?${updatedSearchParams.toString()}`);
+        router.push(`${pathname}?${updatedSearchParams.toString()}`);//actualiza la url con los nuevos parametros
 
     })
 
@@ -52,7 +54,7 @@ const FiltersBar = () => {
             if (isMin !== null) {
                 const index = isMin ? 0 : 1;
                 currentArrayRange[index] = value === "any" ? null : Number(value);
-            }
+            }//establece el nuevo valor para la key correspondiente
             newValue = currentArrayRange;
         } else if (key === "coordinates") {
             newValue = value === "any" ? [0, 0] : value.map(Number);
@@ -81,7 +83,7 @@ const FiltersBar = () => {
                         location: searchInput,
                         coordinates: [lng, lat],
                     })
-                );
+                );//setea los nuevos filtros en el estado global
             }
         } catch (err) {
             console.error("Error search location:", err);

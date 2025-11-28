@@ -33,7 +33,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 setIsLoading(false)
             }
         }
-    }, [authUser, router, pathname])
+    }, [authUser, router, pathname])//redirige al usuario de acuerdo a su rol y la ruta actual
 
 
     if (authLoading || isLoading) return <>Loading...</>

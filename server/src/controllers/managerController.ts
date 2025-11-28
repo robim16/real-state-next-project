@@ -11,7 +11,6 @@ export const getManager = async (req: Request, res: Response): Promise<void> => 
 
         const manager = await prisma.manager.findUnique({
             where: { cognitoId },
-
         })
 
         if (manager) {

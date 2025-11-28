@@ -15,7 +15,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: async (headers) => {
-      const session = await fetchAuthSession();
+      const session = await fetchAuthSession();//obtiene la sesion de autenticacion actual
       const { idToken } = session.tokens ?? {};
       if (idToken) {
         headers.set("Authorization", `Bearer ${idToken}`);
@@ -40,14 +40,14 @@ export const api = createApi({
           const session = await fetchAuthSession();
           const { idToken } = session.tokens ?? {};
           const user = await getCurrentUser();
-          const userRole = idToken?.payload["custom:role"] as string;
+          const userRole = idToken?.payload["custom:role"] as string;//obtener el rol del usuario desde el token
 
           const endpoint =
             userRole === "manager"
               ? `/managers/${user.userId}`
               : `/tenants/${user.userId}`;
 
-          let userDetailsResponse = await fetchWithBQ(endpoint);
+          let userDetailsResponse = await fetchWithBQ(endpoint);//detalles del usuario desde la db
 
           // if user doesn't exist, create new user
           if (
@@ -75,44 +75,68 @@ export const api = createApi({
       },
     }),
 
-    // property related endpoints
+    // Define una query para obtener una lista de propiedades.
     getProperties: build.query<
+      // Tipo de dato que se espera recibir de la API: un array de objetos Property.
       Property[],
+      // Tipo de dato que acepta como argumento para el filtro.
+      // Combina el estado parcial de los filtros (FiltersState) con un campo opcional para IDs de favoritos.
       Partial<FiltersState> & { favoriteIds?: number[] }
     >({
+      // Define la función `query` que construye la URL y los parámetros de la petición.
       query: (filters) => {
+        // Usa la utilidad `cleanParams` para mapear y limpiar los filtros (eliminar valores `undefined` o `null`)
         const params = cleanParams({
-          location: filters.location,
-          priceMin: filters.priceRange?.[0],
-          priceMax: filters.priceRange?.[1],
-          beds: filters.beds,
-          baths: filters.baths,
-          propertyType: filters.propertyType,
-          squareFeetMin: filters.squareFeet?.[0],
-          squareFeetMax: filters.squareFeet?.[1],
-          amenities: filters.amenities?.join(","),
-          availableFrom: filters.availableFrom,
-          favoriteIds: filters.favoriteIds?.join(","),
-          latitude: filters.coordinates?.[1],
-          longitude: filters.coordinates?.[0],
+          location: filters.location, // Parámetro de ubicación
+          priceMin: filters.priceRange?.[0], // Rango de precio mínimo
+          priceMax: filters.priceRange?.[1], // Rango de precio máximo
+          beds: filters.beds, // Número de habitaciones
+          baths: filters.baths, // Número de baños
+          propertyType: filters.propertyType, // Tipo de propiedad (ej: casa, apartamento)
+          squareFeetMin: filters.squareFeet?.[0], // Rango de pies cuadrados mínimo
+          squareFeetMax: filters.squareFeet?.[1], // Rango de pies cuadrados máximo
+          amenities: filters.amenities?.join(","), // Lista de comodidades unidas por coma
+          availableFrom: filters.availableFrom, // Fecha de disponibilidad
+          favoriteIds: filters.favoriteIds?.join(","), // IDs de propiedades favoritas para filtrar (opcional)
+          latitude: filters.coordinates?.[1], // Latitud de la coordenada (si se usa mapa)
+          longitude: filters.coordinates?.[0], // Longitud de la coordenada (si se usa mapa)
         });
 
+        // Retorna el objeto que RTK Query usará para hacer la solicitud:
+        // URL base ('properties') y los parámetros de búsqueda construidos.
         return { url: "properties", params };
       },
+
+      // Define las tags de caché que se proporcionan al Redux store para esta respuesta.
+      // Esto permite invalidar el caché selectivamente (refetching) cuando se realizan mutaciones.
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
-              { type: "Properties", id: "LIST" },
-            ]
-          : [{ type: "Properties", id: "LIST" }],
+            // Mapea cada propiedad individualmente con su ID para invalidación granular.
+            ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+            // Tag genérica para la lista completa.
+            { type: "Properties", id: "LIST" },
+          ]
+          : [
+            // Si no hay resultados, solo se proporciona la tag de lista.
+            { type: "Properties", id: "LIST" },
+          ],
+
+      // Define un hook para efectos secundarios justo al iniciar la query (antes de la respuesta).
       async onQueryStarted(_, { queryFulfilled }) {
-        await withToast(queryFulfilled, {
-          error: "Failed to fetch properties.",
-        });
+        try {
+          // Espera a que la promesa de la query se cumpla.
+          await queryFulfilled;
+          // No hace nada si es exitosa (solo se gestiona el error).
+        } catch (error) {
+          // Usa una utilidad `withToast` (asumiendo que muestra notificaciones)
+          // para manejar el error de forma asíncrona y mostrar un mensaje de fallo.
+          await withToast(queryFulfilled, {
+            error: "Failed to fetch properties.", // Mensaje de error para el toast
+          });
+        }
       },
     }),
-
     getProperty: build.query<Property, number>({
       query: (id) => `properties/${id}`,
       providesTags: (result, error, id) => [{ type: "PropertyDetails", id }],
@@ -122,7 +146,6 @@ export const api = createApi({
         });
       },
     }),
-
     // tenant related endpoints
     getTenant: build.query<Tenant, string>({
       query: (cognitoId) => `tenants/${cognitoId}`,
@@ -139,9 +162,9 @@ export const api = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
-              { type: "Properties", id: "LIST" },
-            ]
+            ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+            { type: "Properties", id: "LIST" },
+          ]
           : [{ type: "Properties", id: "LIST" }],
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
@@ -214,9 +237,9 @@ export const api = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
-              { type: "Properties", id: "LIST" },
-            ]
+            ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+            { type: "Properties", id: "LIST" },
+          ]
           : [{ type: "Properties", id: "LIST" }],
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {

@@ -28,7 +28,7 @@ const Map = () => {
     });
 
     properties.forEach((property) => {
-      const marker = createPropertyMarker(property, map);
+      const marker = createPropertyMarker(property, map);//create marker for each property
       const markerElement = marker.getElement();
       const path = markerElement.querySelector("path[fill='#3FB1CE']");
       if (path) path.setAttribute("fill", "#000000");
@@ -83,6 +83,6 @@ const createPropertyMarker = (property: Property, map: mapboxgl.Map) => {
     )
     .addTo(map);
   return marker;
-};
+};//crea el marker del mapa con el popup
 
 export default Map;

@@ -15,7 +15,7 @@ const SettingsForm = ({
   const form = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
     defaultValues: initialData,
-  });
+  });//useForm para manejar el estado del formulario y la validacion
 
   const toggleEditMode = () => {
     setEditMode(!editMode);

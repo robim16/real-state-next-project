@@ -43,7 +43,7 @@ const PropertyTenants = () => {
         new Date(payment.dueDate).getFullYear() === currentDate.getFullYear()
     );
     return currentMonthPayment?.paymentStatus || "Not Paid";
-  };
+  };//funcion para obtener el estado de pago del mes actual
 
   return (
     <div className="dashboard-container">

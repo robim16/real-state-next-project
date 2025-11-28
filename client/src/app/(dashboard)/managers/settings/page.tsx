@@ -23,7 +23,7 @@ const ManagerSettings = () => {
       cognitoId: authUser?.cognitoInfo?.userId,
       ...data,
     });
-  };
+  };//funcion para manejar ek envio del formulario de configuracion
 
   return (
     <SettingsForm

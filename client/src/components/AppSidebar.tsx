@@ -31,7 +31,8 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
         },
         { icon: Home, label: "Residences", href: "/tenants/residences" },
         { icon: Settings, label: "Settings", href: "/tenants/settings" },
-      ];
+      ];//definicion de los links de navegacion segun el tipo de usuario
+      //al navegar a la ruta dashboard, se redirige al usuario a la ruta correspondiente segun su rol
   return (
     <Sidebar
       collapsible='icon'
@@ -114,6 +115,7 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
             )
 
           })}
+          {/* mapeo de los links de navegacion segun el tipo de usuario */}
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>

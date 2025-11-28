@@ -7,7 +7,7 @@ const PropertyOverview = ({ propertyId }: PropertyOverviewProps) => {
     data: property,
     isError,
     isLoading,
-  } = useGetPropertyQuery(propertyId);
+  } = useGetPropertyQuery(propertyId);//obtiene los datos de una propiedad por su id
 
   if (isLoading) return <>Loading...</>;
   if (isError || !property) {

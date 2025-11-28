@@ -45,7 +45,7 @@ const ApplicationModal = ({
       status: "Pending",
       propertyId: propertyId,
       tenantCognitoId: authUser.cognitoInfo.userId,
-    });
+    });//mutacion que crea la aplicacion
     onClose();
   };
 

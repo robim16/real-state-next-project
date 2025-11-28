@@ -29,7 +29,7 @@ const Applications = () => {
     {
       skip: !authUser?.cognitoInfo?.userId,
     }
-  );
+  );//consulta las aplicaciones del usuario autenticado
   const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
 
   const handleStatusChange = async (id: number, status: string) => {

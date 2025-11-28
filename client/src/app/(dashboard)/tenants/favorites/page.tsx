@@ -26,7 +26,7 @@ const Favorites = () => {
   } = useGetPropertiesQuery(
     { favoriteIds: tenant?.favorites?.map((fav: { id: number }) => fav.id) },
     { skip: !tenant?.favorites || tenant?.favorites.length === 0 }
-  );
+  );//obtiene las propiedades favoritas del inquilino
 
   if (isLoading) return <Loading />;
   if (error) return <div>Error loading favorites</div>;

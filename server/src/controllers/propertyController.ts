@@ -188,7 +188,7 @@ export const getProperty = async (
                         latitude,
                     },
                 },
-            };
+            };//devuelve la propiedad con las coordenadas
             res.json(propertyWithCoordinates);
         }
     } catch (err: any) {
@@ -230,7 +230,7 @@ export const createProperty = async (
         }).done();
 
         return uploadResult.Location;
-      })
+      })//sube los archivos al bucke s3 y retorna las urls
     );
 
     const geocodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
@@ -254,7 +254,7 @@ export const createProperty = async (
             parseFloat(geocodingResponse.data[0]?.lon),
             parseFloat(geocodingResponse.data[0]?.lat),
           ]
-        : [0, 0];
+        : [0, 0];//obtiene las coordenadas de la respuesta de la api de geocoding
 
     // create location
     const [location] = await prisma.$queryRaw<Location[]>`

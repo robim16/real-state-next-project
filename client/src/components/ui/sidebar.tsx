@@ -89,9 +89,18 @@ function SidebarProvider({
   )
 
   // Helper to toggle the sidebar.
+  // Definimos una función llamada toggleSidebar usando React.useCallback. Esto hace que la función se memorice y solo se recree cuando cambien sus dependencias
   const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
-  }, [isMobile, setOpen, setOpenMobile])
+
+    // Si es un dispositivo móvil (isMobile === true)
+    // → togglear el estado del sidebar 
+    return isMobile
+      ? setOpenMobile((open) => !open)   // Móvil: invierte el valor actual de openMobile
+      : setOpen((open) => !open)         // Escritorio: invierte el valor actual de open
+  },
+    // Array de dependencias: useCallback solo vuelve a crear la función si alguno de estos valores cambia
+    [isMobile, setOpen, setOpenMobile]
+  )
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -107,10 +116,10 @@ function SidebarProvider({
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [toggleSidebar])
+  }, [toggleSidebar])//useEffect para agregar un atajo de teclado para togglear el sidebar
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
-  // This makes it easier to style the sidebar with Tailwind classes.
+  // This makes it easier to s tyle the sidebar with Tailwind classes.
   const state = open ? "expanded" : "collapsed"
 
   const contextValue = React.useMemo<SidebarContextProps>(
@@ -124,7 +133,7 @@ function SidebarProvider({
       toggleSidebar,
     }),
     [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
-  )
+  )// Memorizamos el valor del contexto para evitar renders innecesarios
 
   return (
     <SidebarContext.Provider value={contextValue}>

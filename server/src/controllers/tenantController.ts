@@ -125,7 +125,7 @@ export const addFavoriteProperty = async (
         const tenant = await prisma.tenant.findUnique({
             where: { cognitoId },
             include: { favorites: true },
-        });
+        });//busca el arrendatario por su cognitoId
 
         if (!tenant) {
             res.status(404).json({ message: "Tenant not found" });
@@ -144,7 +144,7 @@ export const addFavoriteProperty = async (
                     },
                 },
                 include: { favorites: true },
-            });
+            });//actualiza el arrendatario agregando la propiedad a favoritos
             res.json(updatedTenant);
         } else {
             res.status(409).json({ message: "Property already added as favorite" });
