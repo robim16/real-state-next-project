@@ -1,45 +1,60 @@
-import { usePathname } from 'next/navigation'
-import React from 'react'
-import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from './ui/sidebar'
-import { Building, FileText, Heart, Menu, Settings, X } from 'lucide-react'
-import Home from '@/app/page'
-import { NAVBAR_HEIGHT } from '@/lib/constants'
-import { cn } from '@/lib/utils'
-import Link from 'next/link'
+import { usePathname } from "next/navigation";
+import React from "react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "./ui/sidebar";
+import {
+  Building,
+  FileText,
+  Heart,
+  Home,
+  Menu,
+  Settings,
+  X,
+} from "lucide-react";
+import { NAVBAR_HEIGHT } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const AppSidebar = ({ userType }: AppSidebarProps) => {
-  const pathname = usePathname()
-  const { toggleSidebar, open } = useSidebar()
+  const pathname = usePathname();
+  const { toggleSidebar, open } = useSidebar();
 
   const navLinks =
     userType === "manager"
       ? [
-        { icon: Building, label: "Properties", href: "/managers/properties" },
-        {
-          icon: FileText,
-          label: "Applications",
-          href: "/managers/applications",
-        },
-        { icon: Settings, label: "Settings", href: "/managers/settings" },
-      ]
+          { icon: Building, label: "Properties", href: "/managers/properties" },
+          {
+            icon: FileText,
+            label: "Applications",
+            href: "/managers/applications",
+          },
+          { icon: Settings, label: "Settings", href: "/managers/settings" },
+        ]
       : [
-        { icon: Heart, label: "Favorites", href: "/tenants/favorites" },
-        {
-          icon: FileText,
-          label: "Applications",
-          href: "/tenants/applications",
-        },
-        { icon: Home, label: "Residences", href: "/tenants/residences" },
-        { icon: Settings, label: "Settings", href: "/tenants/settings" },
-      ];//definicion de los links de navegacion segun el tipo de usuario
-      //al navegar a la ruta dashboard, se redirige al usuario a la ruta correspondiente segun su rol
+          { icon: Heart, label: "Favorites", href: "/tenants/favorites" },
+          {
+            icon: FileText,
+            label: "Applications",
+            href: "/tenants/applications",
+          },
+          { icon: Home, label: "Residences", href: "/tenants/residences" },
+          { icon: Settings, label: "Settings", href: "/tenants/settings" },
+        ];
+        //define los links de navegacion dependiendo del tipo de usuario
   return (
     <Sidebar
-      collapsible='icon'
-      className='fixed left-0 bg-white shadow-lg'
+      collapsible="icon"
+      className="fixed left-0 bg-white shadow-lg"
       style={{
-        top: `${NAVBAR_HEIGHT}`,
-        height: `calc(100vh - ${NAVBAR_HEIGHT}px)`
+        top: `${NAVBAR_HEIGHT}px`,
+        height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
       }}
     >
       <SidebarHeader>
@@ -75,10 +90,11 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarMenu>
           {navLinks.map((link) => {
-            const isActive = pathname === link.href
+            const isActive = pathname === link.href;
 
             return (
               <SidebarMenuItem key={link.href}>
@@ -90,36 +106,32 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
                       ? "bg-gray-100"
                       : "text-gray-600 hover:bg-gray-100",
                     open ? "text-blue-600" : "ml-[5px]"
-                  )}>
-
-                  <Link href={link.href} className='w-full' scroll={false}>
+                  )}
+                >
+                  <Link href={link.href} className="w-full" scroll={false}>
                     <div className="flex items-center gap-3">
                       <link.icon
                         className={`h-5 w-5 ${
-                          isActive ? "text-blue-600": "text-gray-600"
+                          isActive ? "text-blue-600" : "text-gray-600"
                         }`}
                       />
                       <span
                         className={`font-medium ${
-                          isActive ? "text-blue-600": "text-gray-600"
+                          isActive ? "text-blue-600" : "text-gray-600"
                         }`}
                       >
                         {link.label}
                       </span>
                     </div>
                   </Link>
-
                 </SidebarMenuButton>
-
               </SidebarMenuItem>
-            )
-
+            );
           })}
-          {/* mapeo de los links de navegacion segun el tipo de usuario */}
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>
-  )
-}
+  );
+};
 
-export default AppSidebar
+export default AppSidebar;
