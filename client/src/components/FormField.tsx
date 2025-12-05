@@ -59,7 +59,6 @@ interface FormFieldProps {
   initialValue?: string | number | boolean | string[];
 }
 
-//render different types of form fields based on the type prop
 export const CustomFormField: React.FC<FormFieldProps> = ({
   name,
   label,
